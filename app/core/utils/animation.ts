@@ -1,6 +1,6 @@
 import $ from "jquery"
 import formData from "../symbols/formData"
-import { sleep } from "./async"
+import { asyncForEach, sleep } from "./async"
 
 export type Frame = {
     duration?: number
@@ -75,6 +75,17 @@ export default class Animation {
         if(node == null) return
 
         this.element = $(node as HTMLElement | JQuery)
+    }
+
+    static addTransition(css: {[key: string]: any, transition?: string}, duration: number, transitionFunction: string) {
+        const {transition, ...stylesWithoutTransition} = css
+        return {
+                ...stylesWithoutTransition,
+                transition: Object.entries(stylesWithoutTransition).reduce(
+                    (totalTransition, [property]) => `${totalTransition}, ${property} ${duration}ms ${transitionFunction}`,
+                    transition ?? ""
+                )
+        }
     }
 
     frame(frameData: Frame & {number?: number}) {
@@ -181,14 +192,13 @@ export default class Animation {
         this.onPlayCallbacks.forEach(callback => callback(this))
 
         if(this.element == null) return this
-
-        for(const [index] of this.frames.slice(this.CurrentFrame).entries()) {
+        await asyncForEach([...this.frames.slice(this.CurrentFrame).entries()], async ([index]) => {
             this.CurrentFrame = index
             
             if(!this.playing) return this
             
             await this.playFrame(false)
-        }
+        })
         this.CurrentFrame = 0
         this.playing = false
 

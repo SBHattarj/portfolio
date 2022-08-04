@@ -1,6 +1,6 @@
 <script lang="ts">
     import Animation, { type Frame } from "app/core/utils/animation"
-import { sleep } from "../utils/async";
+import { asyncForEach, sleep } from "../utils/async";
     export let width = "30vw"
     export let top = "1rem"
     export let left = "1rem"
@@ -46,8 +46,6 @@ import { sleep } from "../utils/async";
 </div>
 
 <style lang="sass">
-    @function timeTaken($total-distance, $distance-unit, $total-time, $time-unit, $distance)
-        @return calc()
     /* table of content
         1. logo
             1.1. logo part
