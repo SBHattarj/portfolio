@@ -203,7 +203,7 @@
     ]} let:transition>
 
         <div
-            transition:transition
+            transition:transition|global
             on:transitionstart={() => {
                 isAnimating = true
             }}
@@ -228,13 +228,13 @@
                             {#key typed}
                             <div
                                 class="highlight-background"
-                                transition:fade={{duration: 700}}
+                                transition:fade|global={{duration: 700}}
                             ></div>
                                 <div
                                     class="dot"
                                     style:top={`${dotX}%`}
                                     style:left={`${dotY}%`}
-                                    transition:fade={{duration: 700}}
+                                    transition:fade|global={{duration: 700}}
                                 ></div>
                             {/key}
                         {/if}

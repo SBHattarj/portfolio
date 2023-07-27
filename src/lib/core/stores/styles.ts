@@ -16,21 +16,21 @@ export const MainStyles = writable({
     },
     fontHighlightColors: [
         "hsl(190,100%,75%)",
-        "hwb(12 0% 0%)"
+        "hsl(12, 100%, 50%)"
     ],
     indentBorderColors: [
-        "hwb(12 0% 0% / 0.65)",
-        "hsl(190 100% 75% / 0.7)",
-        "hwb(103 22% 0% / 0.65)",
+        "hsla(12, 100%, 50%, 0.65)",
+        "hsla(190, 100%, 75%, 0.7)",
+        "hsla(103, 100%, 61%, 0.65)",
     ],
     indentBackgroundColors: [
-        "hwb(12 0% 0% / 0.2)",
-        "hsl(190 100% 75% / 0.1)",
-        "hwb(103 22% 0% / 0.1)",
+        "hsla(12, 100%, 50%, 0.2)",
+        "hsla(190, 100%, 75%, 0.1)",
+        "hsla(103, 100%, 61%, 0.1)",
     ],
     fadedColor: {
-        light: "hwb(0 100% 0% / 0.8)",
-        highlight: "hwb(103 22% 0% / 0.7)"
+        light: "hsla(0, 0%, 100%, 0.8)",
+        highlight: "hsla(103, 100%, 61%, 0.7)"
     },
 
     spacing: {

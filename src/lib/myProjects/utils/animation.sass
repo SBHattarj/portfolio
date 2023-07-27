@@ -1,0 +1,15 @@
+@use "sass:string"
+
+@mixin animation($duration, $timing: "", $delay: "", $iteration-count: "", $direction: "", $fill-mode: "", $play-state: "", $timeline: "")
+  animation-duration: $duration
+  animation-timing-function: $timing
+  animation-delay: $delay
+  animation-iteration-count: $iteration-count
+  animation-direction: $direction
+  animation-fill-mode: $fill-mode
+  animation-play-state: $play-state
+  animation-timeline: $timeline
+  $animation-id: string.unique-id()
+  animation-name: $animation-id
+  @keyframes #{$animation-id}
+    @content

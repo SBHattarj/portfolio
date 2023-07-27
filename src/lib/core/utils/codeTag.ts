@@ -25,7 +25,7 @@ function addCode(target: HTMLElement, lang = "auto") {
         
         return newLine
     }).join('\n');
-    console.log(tabSize, indentSize, indentType)
+    
     const highlighted = 
     lang === "auto" 
     ? hljs.highlightAuto(innerHTML).value
@@ -39,7 +39,7 @@ function addCode(target: HTMLElement, lang = "auto") {
         }
         if(indentSize > 0) {
             line = `${line.replace(new RegExp(`^[${indentType === "tab" ? "\\t" : "\\s"}]+`, 'g'), (str) =>{
-                console.log(str)
+                
                 return `${str.replace(
                     new RegExp(`[${indentType === "tab" ? "\\t" : "\\s"}]{${indentSize}}`, 'g'), 
                     str => `<span class="hljs-whitespace">${str}</span>`

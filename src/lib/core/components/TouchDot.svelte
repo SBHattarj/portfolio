@@ -22,7 +22,7 @@
         x: number | string,
         y: number | string
     }
-    console.log(to)
+    
     let position = {
         x: typeof to.x === "number" ? `${to.x}px` : to.x,
         y: typeof to.y === "number" ? `${to.y}px` : to.y
@@ -72,14 +72,15 @@
                 )
                 x = toPX(to.x, dot) + xTransition
                 y = toPX(to.y, dot) + yTransition
+                
             },
             duration
         }
     }
 </script>
 {#if !animationEnded}
-    <div transition:fade={{duration: 300}}>
-        <div class="dot" in:transition on:introend={() => {
+    <div transition:fade|global={{duration: 300}}>
+        <div class="dot" in:transition|global on:introend={() => {
             animationEnded = true
             dispatch("animationEnded")
         }}></div>
