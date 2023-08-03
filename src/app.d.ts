@@ -8,6 +8,7 @@ declare global {
 		// interface Platform {}
 	}
 	let J: JQueryStatic;
+    interface Object {
+        entries<T extends {[key: any]: any}>(obj: T): [keyof T, T[keyof T]][];
+    }
 }
-
-export {}

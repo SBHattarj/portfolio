@@ -10,6 +10,8 @@
         }>()
     $: mainStyles = $MainStyles
     export let projectData: ProjectData
+    export let descriptionColor = "rgb(255, 2, 48)"
+    console.log(descriptionColor)
     let aWidth = 0
     let aHeight = 0
     let iframeWidth = 0
@@ -22,6 +24,7 @@
     let container: HTMLElement
 </script>
 <div 
+    style:--description-color={descriptionColor}
     class="project-card-container" 
     use:offsetObserve 
     bind:this={container}
@@ -73,6 +76,8 @@
                     style:transform-origin="0 0" 
                     style:border="none" 
                     style:transform={`scale(${scale})`}
+                    loading="lazy"
+                    tabindex="-1"
                 />
             </div>
             <h3>{projectData.name}</h3>
@@ -127,7 +132,7 @@
             width: $width
             aspect-ratio: $aspect-ratio
             background-color: var(--mainStyles-mainBackgroundColor-dark)
-            text-shadow: 1px 0px 0 red, 0px 1px 0 red, -1px 0px 0 red, 0px -1px 0 red, 0px 0px 3em red
+            text-shadow: 1px 0px 0 var(--description-color), 0px 1px 0 var(--description-color), -1px 0px 0 var(--description-color), 0px -1px 0 var(--description-color), 0px 0px 3em var(--description-color)
             color: var(--mainStyles-mainBackgroundColor-dark)
             letter-spacing: 2px
             &::before
@@ -136,12 +141,12 @@
                 position: absolute
                 inset: -1px
                 border-radius: inherit
-                background-image: conic-gradient(from calc(var(--border-rotation) - 45deg), rgb(255, 2, 48) 25%, transparent 45% 50%,rgb(255, 2, 48) 50% 75%, transparent 95% 100%)
+                background-image: conic-gradient(from calc(var(--border-rotation) - 45deg), var(--description-color) 25%, transparent 45% 50%, var(--description-color) 50% 75%, transparent 95% 100%)
                 z-index: -2
                 @include animation($duration: 1.5s, $iteration-count: infinite, $play-state: paused)
                     @for $i from 0 through 1000
                         #{$i/10}%
-                            background-image: conic-gradient(from #{$i / 1000 * 360}deg, rgb(255, 2, 48) 25%, transparent 45% 50%,rgb(255, 2, 48) 50% 75%, transparent 95% 100%)
+                            background-image: conic-gradient(from #{$i / 1000 * 360}deg, var(--description-color) 25%, transparent 45% 50%, var(--description-color) 50% 75%, transparent 95% 100%)
             &:hover::before
                 animation-play-state: running
             &::after
@@ -249,5 +254,5 @@
                 --rotateX: 0deg
                 transform: translateX(-40%) rotateY(calc(45deg - var(--rotateY))) rotateX(var(--rotateX))
                 &:hover
-                    box-shadow: 0px 0px 3em -3px rgb(255, 2, 48)
+                    box-shadow: 0px 0px 3em -3px var(--description-color)
 </style>

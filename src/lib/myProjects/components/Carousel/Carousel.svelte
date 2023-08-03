@@ -1,21 +1,27 @@
-<script lang="ts">
-    import J from "jquery"
-	import { createEventDispatcher } from "svelte";
-    type Offset = {x: number, y: number}
-    type ScrollAnimateDetail = {
+<script context="module" lang="ts">
+    export type Offset = {x: number, y: number}
+    export type ScrollAnimateDetail = {
             distanceFromCenter: Offset,
             parentDimensions: {width: number, height: number},
             childDimensions: {width: number, height: number},
             parent: HTMLElement,
             target: HTMLElement
+            setZIndex(index: number): void
     }
+    export type ScrollCenterDetail = {
+        target: HTMLElement,
+        setZIndex(index: number): void
+    }
+    export type CenterCheck = (distanceFromCenter: Offset, fullWidth: number, fullHeight: number) => boolean
+</script>
+<script lang="ts">
+    import J from "jquery"
+	import { createEventDispatcher } from "svelte";
     const dispatch = createEventDispatcher<{
         "scroll-animate": ScrollAnimateDetail,
-        "scroll-center": {
-            target: HTMLElement,
-        }
+        "scroll-center": ScrollCenterDetail
     }>()
-    export let centerCheck = function (distanceFromCenter: Offset, fullWidth: number, fullHeight: number) {
+    export let centerCheck: CenterCheck = function (distanceFromCenter, fullWidth, fullHeight) {
 
         const scalingX = ((fullWidth / distanceFromCenter.x) ** 2) / 20
         const scalingY = ((fullHeight / distanceFromCenter.y) ** 2) / 20
@@ -27,7 +33,12 @@
         const carouselDisplay = J(carouselRoot).next(".carousel-display")
 
         const children = target.children()
-        children.css("opacity", "0").css("pointer-events", "none")
+        children
+            .css("opacity", "0")
+            .css("pointer-events", "none")
+            .attr("tabindex", "-1")
+            .find("*")
+            .attr("tabindex", "-1")
         children.each(function (index, childDom) {
             const child = J(this)
             let displayedChild = carouselDisplay.children().children(`[data-carousel-display-index="${index}"]`)
@@ -66,7 +77,10 @@
                     "scroll-center" as any, 
                     (e: CustomEvent<ScrollAnimateDetail>) => {
                         dispatch("scroll-center", {
-                            target: e.detail.target
+                            target: e.detail.target,
+                            setZIndex(index: number) {
+                                displayedChild.css("z-index", index.toString())
+                            }
                         })
                 })
             }
@@ -85,12 +99,12 @@
                 height: target.height()!,
             }
             const childDimensions = {
-                width: child.width()!,
-                height: child.height()!,
+                width: displayedChild.width()!,
+                height: displayedChild.height()!,
             }
             const distanceFromCenter = {
                 x: offset.left - parentDimensions.width / 2 + childDimensions.width / 2,
-                y: offset.top - parentDimensions.height + childDimensions.height / 2,
+                y: offset.top - parentDimensions.height / 2 + childDimensions.height / 2,
             }
             const center = centerCheck(
                 distanceFromCenter, 
@@ -98,7 +112,6 @@
                 parentDimensions.height
             )
             
-            console.log(centerCheck, center)
             if(center) {
                 displayedChild.children()[0].dispatchEvent(new CustomEvent(
                     "scroll-center",
@@ -120,6 +133,9 @@
                         childDimensions,
                         parent: parent[0],
                         target: displayedChild.children()[0],
+                        setZIndex(index: number) {
+                            displayedChild.css("z-index", index.toString())
+                        }
                     }
                 }
             ))

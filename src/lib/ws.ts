@@ -16,4 +16,3 @@ export default (function handleWs(cb: (wse: WSEventHandler) => any): (wse: WebSo
         });
     };
 });
-                
