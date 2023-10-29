@@ -4,6 +4,10 @@
     import { MainStyles } from "$lib/core/stores/styles";
     import { offsetObserve, type offsetEventDetail } from "$lib/myProjects/utils/offsetObserve";
     import { createEventDispatcher } from "svelte";
+    export let marginLeft = "0"
+    export let marginTop = "0"
+    export let marginRight = "0"
+    export let marginBottom = "0"
     const dispatch = createEventDispatcher<{
         offsetChange: offsetEventDetail,
         wheel: {container: HTMLElement}
@@ -11,16 +15,14 @@
     $: mainStyles = $MainStyles
     export let projectData: ProjectData
     export let descriptionColor = "rgb(255, 2, 48)"
-    console.log(descriptionColor)
     let aWidth = 0
     let aHeight = 0
     let iframeWidth = 0
     let iframeHeight = 0
-    $: scale = Math.min((aWidth - (toPx?.("2em") ?? 0)) / iframeWidth, (aHeight - (toPx?.("2em") ?? 0)) / iframeHeight) 
+    $: scale = (aWidth - (toPx?.("2em") ?? 0)) / iframeWidth 
     $: scaledIframeWidth = iframeWidth * scale
     $: scaledIframeHeight = iframeHeight * scale
     export let offsetX = 0
-    $: console.log(offsetX)
     let container: HTMLElement
 </script>
 <div 
@@ -31,6 +33,10 @@
     on:wheel={() => {
        dispatch("wheel", {container})
    }}
+   style:margin-left={marginLeft}
+   style:margin-top={marginTop}
+   style:margin-right={marginRight}
+   style:margin-bottom={marginBottom}
     on:offsetChange 
 >
     <div 
@@ -59,12 +65,18 @@
             <div class="hoverer"></div>
             <div 
                 style:width={`${scaledIframeWidth}px`} 
-                style:height={`${scaledIframeHeight}px`} 
+                style:height={import.meta.env.SSR ? "calc(100% - 3rem)" : `${scaledIframeHeight}px`} 
                 style:position="relative" 
                 style:padding="0"
                 style:border-radius={mainStyles.borderRadius.normal}
                 style:overflow="hidden"
             >
+                <div
+                    style:position="absolute"
+                    style:inset="0"
+                    style:z-index="1"
+
+                ></div>
                 <iframe 
                     title={projectData.name} 
                     src={projectData.url} 
@@ -78,6 +90,7 @@
                     style:transform={`scale(${scale})`}
                     loading="lazy"
                     tabindex="-1"
+                    class:no-js={import.meta.env.SSR}
                 />
             </div>
             <h3>{projectData.name}</h3>
@@ -90,18 +103,27 @@
 <style lang="sass">
     @use "sass:math"
     @import "$lib/myProjects/utils/animation.sass"
-    $width: 40ch
-    $aspect-ratio: 2.77 / 3
+    @import "$lib/core/utils/containerQuery.sass"
+    $width: min(40ch, 30vw)
+    $aspect-ratio: 2.57 / 3
     a
         padding: 1rem
         display: block
         width: $width
         aspect-ratio: $aspect-ratio
-
+        @include container($max-width: 18ch)
+    h3
+        margin-bottom: 0.1rem
+        overflow: hidden
+        width: 100%
+        text-overflow: ellipsis
     iframe
         width: 100vw
         aspect-ratio: 3 / 2.77  
         pointer-events: none
+        .no-js
+            height: 100%
+            width: 100%
     h3
         font-size: 1.7rem
     .project-card-container
@@ -112,6 +134,7 @@
         margin: 4rem
         margin-inline: 5rem
         padding: 0
+        margin-block: 1ch
     .project-card-container > .project-card
         display: block
         position: absolute
@@ -122,6 +145,10 @@
         transform-origin: center
         transition: transform 0.25s 3s ease-in, scale 0.2s ease
         perspective: 100em
+        p
+            text-wrap: wrap
+            max-height: 100%
+            overflow: hidden
         & > div
             position: absolute
             top: 0.2rem
@@ -171,7 +198,7 @@
             z-index: 99999
             top: 0
             left: 0
-            transition: top 3s 0s, left 3s 0s, width 2s 0s, height 3s 0s
+            transition: top 4s 0s, left 4s 0s, width 4s 0s, height 4s 0s
 
         &:hover
             scale: 1.05

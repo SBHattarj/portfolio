@@ -1,0 +1,432 @@
+body
+    background-color: var(--mainStyles-mainBackgroundColor-accent)
+    color: var(--mainStyles-fontColor-main)
+    --parent-background-color: var(--mainStyles-mainBackgroundColor-accent)
+    --parent-color: var(--mainStyles-fontColor-main)
+    margin: 0
+body, html
+    min-height: 100%
+
+form
+  padding-left: 0.8em
+input, button, textarea, .btn
+    display: inline-block
+    --border-color: var(--mainStyles-mainBackgroundColor-highlight)
+    color: inherit
+    font-size: inherit
+    background-color: var(--parent-background-color)
+    outline: 0.2em solid var(--mainStyles-mainBackgroundColor-highlight)
+    padding-inline: 1em
+    padding-block: 0.5em
+    border-radius: 1em
+    border: none
+    outline-width: 0.2em
+    transition: outline-width 0.2s
+    margin: 0.3em
+    vertical-align: middle
+    font-family: inherit
+    resize: none
+    &:focus-visible, &:hover
+        outline-width: 0.4em
+input
+    --parent-background-color: inherit
+    background-color: var(--mainStyles-mainBackgroundColor-dark)
+    border-radius: 0.7em
+    margin-left: 0
+
+$input-text-types: "password" "email" "number" "search" "url" "date"
+
+$input-selector: '[type="text"]'
+
+@each $type in $input-text-types
+  $input-selector: $input-selector + ',[type="' + $type + '"]'
+:has(>label+input:is(#{$input-selector}))
+  padding-top: 0.3em
+  position: relative
+  transition: color 0.2s
+  label
+    pointer-events: none
+    display: block
+    position: absolute
+    background-color: var(--parent-background-color, inherit)
+    color: color-mix(in srgb, var(--parent-color, var(--mainStyles-fontColor-main)) 70%, transparent)
+    padding-inline: 0.4em
+    top: 0
+    left: 1em
+    translate: -0.2em 1em
+    transition: translate 0.2s, color 0.2s
+    z-index: 1
+:has(>label+input:is(:focus-visible, :active, :not(:placeholder-shown)):is(#{$input-selector}))
+  label
+    translate: 0 0
+    color: var(--parent-color, inherit)
+    pointer-events: all
+
+input, textarea
+  width: min(60ch, 70%)
+  margin-left: 0
+  box-sizing: border-box
+:has(>*>label+input[type="color"])
+  margin: 0.5em
+  transition: color 0.2s
+  margin-left: 0
+  :has(>label+input[type="color"])
+    display: flex
+    flex-direction: column-reverse
+    aspect-ratio: 1.1
+    padding: 0.8em
+    background-color: var(--mainStyles-mainBackgroundColor-light)
+    gap: 1em
+    border-radius: 0.7em
+    outline: 0.15em solid var(--mainStyles-mainBackgroundColor-highlight)
+    transition: outline-color 0.2s
+    width: min(60ch, 70%)
+    box-sizing: border-box
+    :is(input, label)
+      width: 100%
+    label
+      text-align: center
+    input
+      flex-grow: 1
+      margin: 0
+      transition: outline-color 0.2s
+
+:has(>label+textarea)
+  position: relative
+  padding-top: 2em
+  label
+    position: absolute
+    top: calc(0.7em - var(--border-width))
+    left: calc(0.025em - var(--border-width))
+    z-index: 1
+    padding-top: calc(0.3em + var(--border-width))
+    padding-inline: calc(0.3em + var(--border-width))
+    font-family: inherit
+    transition: top 0.1s, left 0.18s, padding-top 0.3s, padding-inline 0.3s
+    --border-width: 0.2em
+    border-color: var(--mainStyles-fontColor-highlight)
+    &::before
+      content: ""
+      z-index: -1
+      position: absolute
+      inset: 0
+      border-top: solid var(--border-width)
+      border-left: solid var(--border-width)
+      background-color: inherit
+      height: 3em
+      width: 1em
+      background-color: var(--parent-background-color, inherit)
+      transition: border-width 0.3s
+      border-top-left-radius: 0.5em
+      border-color: inherit
+    &::after
+      content: ""
+      z-index: -1
+      position: absolute
+      height: 1.627em
+      inset: 0
+      border-top: solid var(--border-width)
+      border-right: solid var(--border-width)
+      background-color: var(--parent-background-color, inherit)
+      z-index: -2
+      transition: border-width 0.3s
+      border-top-left-radius: 0.5em
+      border-top-right-radius: 0.5em
+      border-color: inherit
+:has(label+textarea:is(:hover, :focus-visible))
+  label
+    --border-width: 0.4em
+    transition: top 0.55s, left 0.3s, padding-top 0.3s, padding-inline 0.3s
+    &::before, &::after
+      transition: border-width 0.3s
+  textarea
+    background-color: var(--parent-background-color, inherit)
+
+:has(>label+input[type="file"])
+  position: relative
+  width: min(60ch, 70%)
+  padding-bottom: 0.3em
+  label
+    position: absolute
+    bottom: 0
+    left: 50%
+    translate: -50%
+    background-color: var(--parent-background-color, inherit)
+    padding-inline: 0.5em
+  input[type="file"]
+    width: 100%
+    display: block
+    display: flex
+    padding: 1em
+    text-align: center
+    text-align-last: center
+    --folder-image: url("/folder-new.svg")
+    &::file-selector-button
+      display: block
+      width: 100%
+      aspect-ratio: 1.4
+      color: transparent
+      background-color: transparent
+      border-radius: inherit
+      outline: none
+      border: none
+      margin-bottom: 1em
+      background-image: var(--folder-image)
+      background-repeat: no-repeat
+      background-size: contain
+      background-position: center
+
+
+:has(>*>label+input[type="file"]):has(*+.errors)
+  color: var(--mainStyles-fontHighlightColors-_1)
+  border-left: solid 0.1em
+  border-bottom-left-radius: 1em
+  input
+    outline-color: var(--mainStyles-fontHighlightColors-_1)
+
+.errors
+  color: var(--mainStyles-fontHighlightColors-_1)
+  list-style-type: "> "
+  padding-bottom: 1em
+:has(>label+:is(textarea, input)+.errors)
+  --parent-color: var(--mainStyles-fontHighlightColors-_1)
+  color: var(--mainStyles-fontHighlightColors-_1)
+  border-left: solid 0.1em 
+  border-bottom-left-radius: 1em
+:has(>label+textarea+.errors)
+  border-top-left-radius: 1.5em
+  transition: color 0.4s
+  label
+    border-color: var(--mainStyles-fontHighlightColors-_1)
+  textarea
+    outline-color: var(--mainStyles-fontHighlightColors-_1)
+    
+:has(>label+input:not([type="color"])+.errors)
+  border-top-left-radius: 1.5em
+  transition: color 0.4s
+  input
+    outline-color: var(--mainStyles-fontHighlightColors-_1)
+
+:has(>*>label+input[type="color"]):has(*+.errors)
+  border-top-left-radius: 1em
+  :has(>label+input[type="color"])
+    outline-color: var(--mainStyles-fontHighlightColors-_1)
+    input
+      outline-color: var(--mainStyles-fontHighlightColors-_1)
+
+$prefixes: "-moz-" "-webkit-" ""
+input[type="color"]
+    padding: 0
+    overflow: hidden
+    @each $prefix in $prefixes
+      &::#{$prefix}color-swatch-wrapper
+        padding: 0
+        margin: 0
+        outline: none
+        border: none
+      &::#{$prefix}color-swatch
+        outline: none
+        border: none
+
+input[type="date"]
+  position: relative
+  &::-webkit-calendar-picker-indicator
+    color: inherit
+    position: absolute
+    inset: 0
+    width: auto
+    height: auto
+    opacity: 0
+  &::after
+    content: "\f073"
+a
+    display: inline-block
+    verticle-align: middle
+    color: var(--mainStyles-fontColor-main)
+    vertical-align: middle
+    transition: outline-width 0.2s
+    background-color: var(--mainStyles-mainBackgroundColor-light)
+    border-radius: var(--mainStyles-borderRadius-normal)
+    outline: 0.2rem solid var(--mainStyles-mainBackgroundColor-highlight)
+    text-align: center
+    padding-inline: 1em
+    margin-inline: 0.5em
+    text-decoration: none
+    &:hover, &:focus-visible, [data-focus] &
+        outline-width: 0.4rem
+header
+    position: fixed
+    top: 0
+    left: 0
+    right: 0
+    z-index: 4
+    background-color: var(--mainStyles-mainBackgroundColor-light)
+    --parnet-background-color: var(--mainStyles-mainBackgroundColor-light)
+    height: 3rem
+    box-shadow: 0px 1ch 1.5ch black
+    @media (max-width: 150ch)
+        height: 3.5rem
+    nav
+        position: absolute
+        right: 0
+        display: flex
+        flex-direction: row
+        align-items: center
+        height: 100%
+        justify-content: space-aroud
+        ul
+            display: inline-block
+            list-style: none
+            margin: 0
+            li
+                display: inline-block
+                a
+                    padding-bottom: 0.5em
+                    position: relative
+                    &::after
+                        content: ""
+                        display: block
+                        position: absolute
+                        bottom: 0.1em
+                        left: 50%
+                        right: 50%
+                        height: 0.2em
+                        transition: right 500ms, left 500ms
+                        background-color: var(--mainStyles-mainBackgroundColor-highlight)
+                        border-radius: 50%
+                    &.active
+                        pointer-events: none
+                        &::after
+                            right: 0.7em
+                            left: 0.7em
+                    &.disabled
+                        background-color: var(--mainStyles-mainBackgroundColor-inactive)
+                        pointer-events: none
+                        border-color: var(--mainStyles-fontColor-main)
+        @media (max-width: 110ch)
+            .mobile-nav-open-button
+                right: 0.5rem
+                height: 2.5rem
+                aspect-ratio: 1
+                position: absolute
+            .mobile-nav-close-button
+                position: absolute
+                right: 0.5rem
+                height: 2.5rem
+                aspect-ratio: 1
+                pointer-events: none
+                transform-origin: 50% 50%
+                transition: scale 200ms
+                svg path
+                    transition: stroke-dashoffset 500ms
+            .mobile-nav-open-button:hover ~ .mobile-nav-close-button, .mobile-nav-close-button:hover
+                scale: 1.1
+            ul
+                z-index: -1
+                position: fixed
+                top: 0
+                left: 0
+                right: 0
+                bottom: 0
+                display: flex
+                flex-direction: column
+                justify-content: center
+                flex-wrap: wrap
+                align-content: center
+                gap: 1em
+                clip-path: circle(0% at calc(100% - 1.75rem) 1.75rem)
+                transition: clip-path 1s
+                background-color: var(--mainStyles-mainBackgroundColor-light)
+                --parent-background-color: var(--mainStyles-mainBackgroundColor-light)
+                padding: 0
+                li
+                    display: block
+                    font-size: 2rem
+                    width: min(60ch, 60vw)
+                    a
+                        display: block
+                        width: 100%
+                        background-color: var(--mainStyles-mainBackgroundColor-accent)
+                        margin: 0
+                        padding: 0
+                        padding-bottom: 0
+                        &.active
+                            background-color: var(--mainStyles-mainBackgroundColor-inactive)
+                            pointer-events: none
+                            outline-color: var(--mainStyles-fontColor-main)
+                            &::after
+                                right: 100%
+            .mobile-nav-open-button:focus ~ ul, ul:focus, ul:focus-within
+                clip-path: circle(200% at calc(100% - 1.75em) 1.75rem)
+
+            $nav-close-button: ".mobile-nav-close-button"
+            $nav-open-button-focus: ".mobile-nav-open-button:focus"
+            $ul-focus: "ul:focus"
+            $nav-area-opened-selector: $nav-open-button-focus + " ~ "
+            $nav-area-opened-selector: $nav-area-opened-selector + $nav-close-button + ", "
+            $nav-area-opened-selector: $nav-area-opened-selector + $ul-focus + " ~ "
+            $nav-area-opened-selector: $nav-area-opened-selector + $nav-close-button + ", "
+            $nav-area-opened-selector: $nav-area-opened-selector + $ul-focus + "-within ~ "
+            $nav-area-opened-selector: $nav-area-opened-selector + $nav-close-button
+            #{$nav-area-opened-selector}
+                pointer-events: all
+                svg path
+                    stroke-dashoffset: 115
+section>h2:first-child
+    padding-inline: 3rem
+    width: fit-content
+    margin-inline: auto
+    line-height: 2.4em
+    font-size: 1.4rem
+    border-bottom: 1px solid 
+    border-image: linear-gradient(to right, transparent, var(--mainStyles-fontColor-highlight), transparent) 1
+    color: var(--mainStyles-fontColor-highlight)
+    --parent-color: var(--mainStyles-fontColor-highlight)
+pre.hljs
+    background-color: var(--mainStyles-mainBackgroundColor-dark)
+    padding: var(--mainStyles-spacing-normal)
+    border-radius: var(--mainStyles-borderRadius-normal)
+    margin: 0
+    overflow: hidden
+    .hljs-code-block
+        min-width: 0px
+        overflow: hidden
+    .hljs-code-line
+        min-width: 0px
+        overflow: hidden
+        display: flex
+        white-space: pre-wrap
+        flex-direction: row
+    .hljs-whitespace
+        white-space: pre
+        &:not(:last-child)
+            border-right: 0.1em solid
+        @for $i from 1 through 3
+            &:nth-child(3n+#{$i})
+                color: var(--mainStyles-indentBorderColors-_#{($i - 1)})
+                background-color: var(--mainStyles-indentBackgroundColors-_#{($i - 1)})
+                word-wrap: none
+    .hljs-line-id
+        padding-right: var(--mainStyles-spacing-small)
+        margin-right: var(--mainStyles-spacing-normal)
+        border-right: 1px solid var(--mainStyles-fadedColor-light)
+        height: 100%
+        display: block
+        color: var(--mainStyles-fadedColor-highlight)
+        text-align: right
+    .hljs-comment
+        color: var(--mainStyles-fadedColor-light)
+    .hljs-quote, .hljs-string, .hljs-symbol, .hljs-bullet, .hljs-addition
+        color: var(--mainStyles-fontColor-highlight)
+    .hljs-variable, .hljs-template-variable, .hljs-tag, .hljs-name, .hljs-selector-id, .hljs-selector-class, .hljs-regexp, .hljs-deletion, .hljs-keyword, .hljs-selector-tag, .hljs-attribute, .hljs-title, .hljs-section
+        color: var(--mainStyles-fontHighlightColors-_0)
+    .hljs-keyword, .hljs-selector-tag, .hljs-attribute
+        font-style: italic
+    .hljs-title, .hljs-section
+        font-weight: bold
+    .hljs-number, .hljs-built_in, .hljs-literal, .hljs-type, .hljs-params, .hljs-meta, .hljs-link
+        color: var(--mainStyles-fontHighlightColors-_1)
+    .hljs-emphasis
+        font-style: italic
+    .hljs-strong
+        font-weight: bold

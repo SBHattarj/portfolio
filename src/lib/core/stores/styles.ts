@@ -6,6 +6,7 @@ export const MainStyles = writable({
         light: "hsl(0, 2%, 20%)",
         dark: "hsl(0, 0%, 2%)",
         highlight: "hsl(125, 100%, 55%)",
+        inactive: "hsl(0, 6%, 30%)"
     },
     backgroundHighlightColors: [
         "hsl(185,100%,70%)"
@@ -30,7 +31,8 @@ export const MainStyles = writable({
     ],
     fadedColor: {
         light: "hsla(0, 0%, 100%, 0.8)",
-        highlight: "hsla(103, 100%, 61%, 0.7)"
+        highlight: "hsla(103, 100%, 61%, 0.7)",
+        darkLight: "hsla(0, 0%, 100%, 0.1)",
     },
 
     spacing: {

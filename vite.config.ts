@@ -7,7 +7,21 @@ export default defineConfig({
 	plugins: [
 		sveltekit(),
 		WebSockets(),
-		serverBrowserSync()
+		serverBrowserSync(),
+        {
+            name: "jquery-polyfill",
+            enforce: "pre",
+            resolveId(id) {
+                if(id === "jquery") {
+                    return "jquery";
+                }
+            },
+            load(id) {
+                if(id === "jquery") {
+                    return "export default globalThis.$";
+                }
+            }
+        },
 	],
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']

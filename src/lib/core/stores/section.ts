@@ -12,7 +12,7 @@ class NameAlreadyTakenError extends Error {
     }
 }
 
-export default function createSectionObserver() {
+export default function createSectionObserver(options: ConstructorParameters<typeof IntersectionObserver>[1] = {}) {
     let intersectionObserber: IntersectionObserver
     let {update, subscribe} = writable<sectionObserver>({
         sections: new Set(),
@@ -22,20 +22,21 @@ export default function createSectionObserver() {
         if(get({subscribe}).sections.has(name)) throw new NameAlreadyTakenError(name)
         if(intersectionObserber == null) intersectionObserber = new IntersectionObserver((e) => {
             e.forEach((e) => {
+                let currentName = e.target.id
                 if(e.isIntersecting) {
                     update(sections => {
-                        sections.visibleSections.add(name)
+                        sections.visibleSections.add(currentName)
                         return sections
                     })
                 }
                 if(!e.isIntersecting) {
                     update(sections => {
-                        sections.visibleSections.delete(name)
+                        sections.visibleSections.delete(currentName)
                         return sections
                     })
                 }
             })
-        })
+        }, options)
         intersectionObserber.observe(node)
         node.id = name
         update(sections => {

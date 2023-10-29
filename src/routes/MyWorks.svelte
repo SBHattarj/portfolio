@@ -7,8 +7,11 @@
         ScrollAnimateDetail,
         ScrollCenterDetail
     } from "$lib/myProjects/components/Carousel/Carousel.svelte";
-    import { projects } from "./placeholder"
-    import { projectTypeColor, projectTypes } from "./projectTypes"
+    import type { PageData } from "./$types"
+
+
+    export let projects: PageData["projects"];
+
     function scrollAnimation(e: CustomEvent<ScrollAnimateDetail>) {
         let scale = (
             (
@@ -16,16 +19,17 @@
             ) 
             ** 2
         ) / 20
-        let side = e.detail.distanceFromCenter.x / Math.abs(e.detail.distanceFromCenter.x)
+        
+        let side = e.detail.distanceFromCenter.x / Math.abs(e.detail.distanceFromCenter.x) * 300
 
         const translate = -e.detail.distanceFromCenter.x 
             + side 
             * e.detail.parentDimensions.width 
             / (scale ** 0.5) 
-            / 8
+            / 1600
 
         J(e.detail.target)
-            .css("scale", Math.min(scale, 1).toString())
+            .css("scale", Math.min(scale, 0.9).toString())
             .css("pointer-events", "none")
             .css("transform-origin", "center")
             .css("translate", `${translate}px`)
@@ -43,35 +47,65 @@
         let scaling = Math.abs(((fullWidth / x) ** 2) / 200)
         return scaling > 1
     }
-    $: projectEntries = Object.entries(projects).reverse() as [keyof typeof projects, (typeof projects[keyof typeof projects])][]
-    
 </script>
 
-{#each projectEntries as [key, value] (key)}
+{#each projects as [key, value] (key)}
     <h3
     >
-        <i style:--color={projectTypeColor[key]}>{key}</i>
+        <i style:--color={value.color}>{key}</i>
     </h3>
     <div>
         <Carousel
             {centerCheck}
             on:scroll-animate={scrollAnimation}
             on:scroll-center={scrollCenter}
+            spaceDisplay="inline-block"
+            padding="5ch"
         >
             <div
                 style:white-space="nowrap"
                 style:position="relative"
                 style:width="100%"
-                style:overflow="scroll"
+                style:overflow="auto"
                 style:box-sizing="border-box"
-                style:scroll-snap-type="x mandatory"
+                style:scroll-snap-type={import.meta.env.SSR ? "none" : "x mandatory"}
+                style:padding-block="4ch"
             >
-            {#each value as website}
-                <Project
-                    projectData={website}
-                    descriptionColor={projectTypeColor[key]}
-                />
-            {/each}
+                {#if !import.meta.env.SSR}
+                    <div
+                        style:display="inline-block"
+                        style:width="calc(2.8rem + 40ch)"
+                        style:margin-inline="5rem"
+                        class="padding"
+                    ></div>
+                    <div
+                        style:display="inline-block"
+                        style:width="calc(2.8rem + 40ch)"
+                        style:margin-inline="5rem"
+                        class="padding"
+                    ></div>
+                {/if}
+                {#each value.projects as website}
+                    <Project
+                        projectData={website}
+                        descriptionColor={value.color}
+                        marginLeft="9rem"
+                    />
+                {/each}
+                {#if !import.meta.env.SSR}
+                    <div
+                        style:display="inline-block"
+                        style:width="calc(2.8rem + 40ch)"
+                        style:margin-inline="5rem"
+                        class="padding"
+                    ></div>
+                    <div
+                        style:display="inline-block"
+                        style:width="calc(2.8rem + 40ch)"
+                        style:margin-inline="5rem"
+                        class="padding"
+                    ></div>
+                {/if}
             </div>
         </Carousel>
     </div>

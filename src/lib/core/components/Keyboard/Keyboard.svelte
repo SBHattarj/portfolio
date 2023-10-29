@@ -117,52 +117,58 @@
             yPos: percentPosY
         }
     }
-    $: (async () => {
-        await sleep(1000 / typingSpeed * (1 - Math.random() * percentTypingConsistency / 100))
-        if(toBeTyped === '' && !allowEmpty) {
-            return
+    async function typer(toBeTypedInner: string, typeInner: boolean)  {
+        console.log(toBeTypedInner)
+        while(type && typed !== toBeTypedInner && toBeTypedInner === toBeTyped) {
+            await sleep(1000 / typingSpeed * (1 - Math.random() * percentTypingConsistency / 100))
+            if(toBeTyped === '' && !allowEmpty) {
+                continue
+            }
+            if(!type) continue
+            if(virtualKeyTyped in keyboards[currentKeyboard]) {
+                currentMode = virtualKeyTyped as KeyboardModes
+                virtualKeyTyped = ""
+                continue
+            }
+            if(virtualKeyTyped !== "Backspace" && virtualKeyTyped !== ''){
+                typed = typed + (virtualKeyTyped === "Enter" ? "\n" : virtualKeyTyped)
+            }
+            if(virtualKeyTyped === "Backspace")
+                typed = typed.substring(0, typed.length - 1)
+
+            const indexToBeTyped = toBeTyped.split('').findIndex((letter, index) => letter !== typed[index])
+            const currentLetterToBeTyped = toBeTyped[indexToBeTyped] ?? ''
+            const letterToBeTyped =
+                typed !== toBeTyped.substring(0, typed.length)
+                ? "Backspace"
+                : currentLetterToBeTyped
+            if(letterToBeTyped === '') continue
+            const {
+                mode,
+                xIndex,
+                yIndex,
+                xPos,
+                yPos
+            } = getRealPosKeyToType(letterToBeTyped)
+            const newKey =  keyboards
+                ?.[currentKeyboard]
+                ?.[mode]
+                ?.[yIndex]
+                ?.[xIndex]
+                ?? ""
+            virtualKeyTyped = newKey
+            dotX = xPos
+            dotY = yPos
         }
         if(typed === toBeTyped) {
             if(virtualKeyTyped !== '') dispatch("type-end")
             virtualKeyTyped = ''
-            return
         }
-        if(!type) return
-        if(virtualKeyTyped in keyboards[currentKeyboard]) {
-            currentMode = virtualKeyTyped as KeyboardModes
-            virtualKeyTyped = ""
-            return
-        }
-        if(virtualKeyTyped !== "Backspace" && virtualKeyTyped !== ''){
-            typed = typed + (virtualKeyTyped === "Enter" ? "\n" : virtualKeyTyped)
-        }
-        if(virtualKeyTyped === "Backspace")
-            typed = typed.substring(0, typed.length - 1)
-
-        const indexToBeTyped = toBeTyped.split('').findIndex((letter, index) => letter !== typed[index])
-        const currentLetterToBeTyped = toBeTyped[indexToBeTyped] ?? ''
-        const letterToBeTyped =
-            typed[typed.length - 1] !== toBeTyped[typed.length - 1]
-            ? "Backspace"
-            : currentLetterToBeTyped
-        if(letterToBeTyped === '') return
-        const {
-            mode,
-            xIndex,
-            yIndex,
-            xPos,
-            yPos
-        } = getRealPosKeyToType(letterToBeTyped)
-        const newKey =  keyboards
-            ?.[currentKeyboard]
-            ?.[mode]
-            ?.[yIndex]
-            ?.[xIndex]
-            ?? ""
-        virtualKeyTyped = newKey
-        dotX = xPos
-        dotY = yPos
-    })()
+    }
+    $: {
+        console.log(toBeTyped)
+        typer(toBeTyped, type)
+    }
     function createGridLayout(virtualGrid: typeof VirtualGrid, currentMode: string) {
         if(currentMode in virtualGrid) {
             const rows = virtualGrid[currentMode as keyof typeof VirtualGrid]
@@ -220,10 +226,15 @@
                         style:grid-area={VirtualGrid[currentMode][rowIndex][cellIndex]}
                         class="keyboard-cell"
                     >
-                        <p
-                        >
-                            {cell}
-                        </p>
+                        {#if cell.startsWith("ABC")}
+                            <p>⇬</p>
+                        {:else if cell === "Backspace"}
+                            <p>⌫</p>
+                        {:else if cell === "\n"}
+                            <p>⏎</p>
+                        {:else}
+                            <p>{cell}</p>
+                        {/if}
                         {#if virtualKeyTyped === cell}
                             {#key typed}
                             <div

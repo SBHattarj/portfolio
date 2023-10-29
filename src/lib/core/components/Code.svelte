@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import Highlight from 'svelte-highlight';
     import type {LanguageType} from "svelte-highlight/languages"
+    import J from "jquery"
     let mutationObserver: MutationObserver
     let code = ""
     export let language: LanguageType<string>
@@ -10,7 +11,6 @@
         if(!mutationObserver) mutationObserver = new MutationObserver(mut => {
             mut.forEach(m => {
                 let tabSize = -1
-                console.log(m.target)
                 code = J(preEll).text().split('\n').map(line => {
                     if(tabSize === -1) {
                         tabSize = line.search(/[^\t\s]/)

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import J from "jquery"
     import TouchDot from "$lib/core/components/TouchDot.svelte";
     import { sleep } from "$lib/core/utils/async";
     import { say } from "$lib/core/stores/Info";

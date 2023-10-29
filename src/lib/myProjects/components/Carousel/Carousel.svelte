@@ -16,32 +16,68 @@
 </script>
 <script lang="ts">
     import J from "jquery"
-	import { createEventDispatcher } from "svelte";
+    import toPX from "to-px"
+	import { createEventDispatcher, onMount } from "svelte";
+	import SideCodePanel from "server:/routes/SideCodePanel.svelte";
+    export let controllButtons: boolean = false
+    export let padding: string | number = 0
+    export let initialOffset: {x: string | number, y: string | number} = {x: 0, y: 0}
     const dispatch = createEventDispatcher<{
         "scroll-animate": ScrollAnimateDetail,
         "scroll-center": ScrollCenterDetail
     }>()
+    export let spaceDisplay: string = "block"
     export let centerCheck: CenterCheck = function (distanceFromCenter, fullWidth, fullHeight) {
 
         const scalingX = ((fullWidth / distanceFromCenter.x) ** 2) / 20
         const scalingY = ((fullHeight / distanceFromCenter.y) ** 2) / 20
         return scalingX > 1 && scalingY > 1
     }
+    let mountedInJs = false
+    onMount(() => {
+        mountedInJs = true
+    })
     
     function scrollCB(node: HTMLElement, carouselRoot: HTMLElement) {
         const target = J(node)
+        target.css("scroll-behavior", "smooth")
         const carouselDisplay = J(carouselRoot).next(".carousel-display")
+        if(target.children(".space").length < 1) {
+            target.append(`<div 
+                class="space"
+                style="width: ${
+                    typeof initialOffset.x === "number"
+                    ? `${initialOffset.x}px`
+                    : initialOffset.x
+                }; height: ${
+                    typeof initialOffset.y === "number"
+                    ? `${initialOffset.y}px`
+                    : initialOffset.y
+                }; display: ${spaceDisplay};"
+            ></div>`)
+        }
 
-        const children = target.children()
+        const children = target.children().not(".space")
         children
             .css("opacity", "0")
             .css("pointer-events", "none")
-            .attr("tabindex", "-1")
             .find("*")
-            .attr("tabindex", "-1")
         children.each(function (index, childDom) {
             const child = J(this)
             let displayedChild = carouselDisplay.children().children(`[data-carousel-display-index="${index}"]`)
+            displayedChild
+                .attr("tabindex", "-1")
+                .find("a")
+                .attr("tabindex", "-1")
+            displayedChild.find("a").on("focus", () => {
+            })
+            child.find("*").on("focus", function () {
+                child.parent().scrollTo(child.prev())
+                displayedChild.attr("data-focus", "true")
+                J(this).one("blur", () => {
+                    displayedChild.removeAttr("data-focus")
+                })
+            })
             if(displayedChild.length === 0) {
                 carouselDisplay
                     .children()
@@ -56,7 +92,7 @@
                     `)
                 displayedChild = carouselDisplay.children().children(`[data-carousel-display-index="${index}"]`)
                 let scroll: ReturnType<typeof setTimeout>
-                displayedChild.on("wheel", () => {
+                function allowScroll() {
                     displayedChild.css("pointer-events", "none").find("*").css("pointer-events", "none")
                         .attr("data-pointer-events", "none")
                     clearTimeout(scroll)
@@ -64,7 +100,9 @@
                         displayedChild.css("pointer-events", "all").find("*").css("pointer-events", "all")
                             .attr("data-pointer-events", "all")
                     }, 250)
-                })
+                }
+                displayedChild.on("wheel", allowScroll)
+                displayedChild.on("touchmove", allowScroll)
                 displayedChild.children().on(
                     "scroll-animate" as any, 
                     (e: CustomEvent<ScrollAnimateDetail>) => {
@@ -89,9 +127,17 @@
                 .css(
                     "translate",
                     `${
-                        offset.left
+                        offset.left + (
+                            typeof initialOffset.x === "number" 
+                            ? initialOffset.x 
+                            : toPX(initialOffset.x) ?? 0
+                        )
                     }px ${
-                        offset.top
+                        offset.top + (
+                            typeof initialOffset.y === "number" 
+                            ? initialOffset.y 
+                            : toPX(initialOffset.y) ?? 0
+                        )
                     }px`
                 )
             const parentDimensions = {
@@ -103,8 +149,16 @@
                 height: displayedChild.height()!,
             }
             const distanceFromCenter = {
-                x: offset.left - parentDimensions.width / 2 + childDimensions.width / 2,
-                y: offset.top - parentDimensions.height / 2 + childDimensions.height / 2,
+                x: offset.left + (
+                    typeof initialOffset.x === "number" 
+                    ? initialOffset.x 
+                    : toPX(initialOffset.x) ?? 0
+                ) - parentDimensions.width / 2 + childDimensions.width / 2,
+                y: offset.top + (
+                    typeof initialOffset.y === "number" 
+                    ? initialOffset.y 
+                    : toPX(initialOffset.y) ?? 0
+                ) - parentDimensions.height / 2 + childDimensions.height / 2,
             }
             const center = centerCheck(
                 distanceFromCenter, 
@@ -121,8 +175,10 @@
                         }
                     }
                 ))
+                child.attr("data-center", "true")
                 return 
             }
+            child.removeAttr("data-center")
             
             displayedChild.children()[0].dispatchEvent(new CustomEvent(
                 "scroll-animate",
@@ -142,21 +198,43 @@
         })
 
     }
+    let scroller: HTMLElement
+    export function scrollNext() {
+        if(scroller) {
+            J(scroller)
+                .children("[data-center]")
+                .next()
+                .not(".padding")
+                .get(0)
+                ?.scrollIntoView({block: "center", inline: "center", behavior: "smooth"})
+        }
+    }
+    export function scrollPrev() {
+        if(scroller) {
+            J(scroller)
+                .children("[data-center]")
+                .prev()
+                .not(".padding")
+                .get(0)
+                ?.scrollIntoView({block: "center", inline: "center", behavior: "smooth"})
+        }
+    }
     function carouselRoot(node: HTMLElement) {
         let scrollers = node.children
-        console.log(scrollers)
         if(scrollers.length > 1) throw new Error("Carousel must have only one scrollable element")
         else if(scrollers.length < 1) throw new Error("Carousel must have one scrollable element")
-        const scroller = scrollers[0]
+        scroller = scrollers[0] as HTMLElement
         if(!(scroller instanceof HTMLElement)) throw new Error("Carousel child must be an HTML Element")
         scrollCB(scroller, node)
         function scrollerScrollCB() {
             scrollCB(scroller as HTMLElement, node)
         }
         scroller.addEventListener("scroll", scrollerScrollCB)
+        scroller.addEventListener("pointermove", scrollerScrollCB)
         return {
             destroy() {
                 scroller.removeEventListener("scroll", scrollerScrollCB)
+                scroller.removeEventListener("pointermove", scrollerScrollCB)
             }
         }
     }
@@ -170,16 +248,44 @@
     style:position="relative"
     style:overflow="hidden"
     style:width="100%"
+    style:padding-block={padding}
     
 >
+    {#if !import.meta.env.SSR && controllButtons}
+        <button 
+            style:position="absolute"
+            style:z-index="2"
+            style:top="50%"
+            style:left="1rem"
+            style:transition="0 50%"
+            on:click={scrollPrev}
+        >{"<"}</button>
+        <button
+            style:position="absolute"
+            style:z-index="2"
+            style:top="50%"
+            style:right="1rem"
+            style:transition="0 50%"
+            on:click={scrollNext}
+        >{">"}</button>
+    {/if}
     <div use:carouselRoot>
         <slot />
     </div>
-    <div 
-        class='carousel-display'
-        style:position="absolute"
-        style:top="0"
-    >
-        <slot />
-    </div>
+    {#if !import.meta.env.SSR}
+        <div 
+            class='carousel-display'
+            style:position="absolute"
+            style:top={padding}
+        >
+            <slot />
+        </div>
+    {/if}
 </div>
+<style lang="sass">
+    .carousel
+        display: block
+        @media (hover: none), (hover: on-demand), (-moz-touch-enabled: 1), (pointer:coarse)
+            button
+                display: none
+</style>

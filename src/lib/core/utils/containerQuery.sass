@@ -1,0 +1,12 @@
+@use "sass:string"
+@use "sass:meta"
+@mixin container($args...)
+    $containerId: string.unique-id()
+    container-type: inline-size
+    container-name: $containerId
+    $query: ""
+    @each $key, $kwarg in meta.keywords($args)
+      $query: $query + " (" + $key + ": " + $kwarg + ")"
+    @debug $query
+    @container #{$containerId} #{$query}
+      @content
