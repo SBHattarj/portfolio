@@ -9,20 +9,10 @@ export function getProjects(limit: number = 10, offset: number = 0) {
             .from(projectType)
             .innerJoin(
                 project, 
-                and(
-                    eq(
-                        project.type,
-                        projectType.name
-                    ),
-                    gt(
-                        project.id,
-                        offset
-                    ),
-                    lt(
-                        project.id,
-                        offset + limit
-                    )
-                )
+	        eq(
+		    project.type,
+		    projectType.name
+		),
             )).reduce((accumulator, current) => {
                 if(accumulator.has(current.project_type.name)) {
                     accumulator.get(current.project_type.name)?.projects.push(current.project)

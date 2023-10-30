@@ -54,7 +54,7 @@ export default function handleWs(cb, validator, dispose) {
                     this.weakRef
                 );
                 // @ts-ignore
-                let caller = async () => await import("/home/mav/repos/portfolio/src/lib/core/server/visitor")
+                let caller = async () => await import("/data/data/com.termux/files/home/repos/portfolio/src/lib/core/server/visitor")
 
                 const result = await caller();
                 update();
@@ -70,7 +70,7 @@ export default function handleWs(cb, validator, dispose) {
             }.bind(data));
         
 
-            wsEvents.on("/home/mav/repos/portfolio/src/routes/+page.svelte-0", /** 
+            wsEvents.on("/data/data/com.termux/files/home/repos/portfolio/src/routes/+page.svelte-0", /** 
             * @this CacheData
             * @param {string} str
             */ async function (str) {
@@ -87,7 +87,7 @@ export default function handleWs(cb, validator, dispose) {
                     this.functionRef,
                     this.weakRef
                 );
-                const { getVisitorNumber: getVisitorNumber, IntroComplete: IntroComplete } = await import("/home/mav/repos/portfolio/src/lib/core/server/visitor");
+                const { getVisitorNumber: getVisitorNumber, IntroComplete: IntroComplete } = await import("/data/data/com.termux/files/home/repos/portfolio/src/lib/core/server/visitor");
                 // @ts-ignore
                 let caller = async () => {
 // @ts-ignore
@@ -101,7 +101,7 @@ export default function handleWs(cb, validator, dispose) {
 
                 const result = await caller();
                 update($page);
-                wsEvents.emit(`/home/mav/repos/portfolio/src/routes/+page.svelte-0-${id}`, serialize(
+                wsEvents.emit(`/data/data/com.termux/files/home/repos/portfolio/src/routes/+page.svelte-0-${id}`, serialize(
                     result, 
                     "back", 
                     wsEvents,
@@ -131,7 +131,7 @@ export default function handleWs(cb, validator, dispose) {
                     this.weakRef
                 );
                 // @ts-ignore
-                let caller = async () => await import("/home/mav/repos/portfolio/src/routes/SideCodePanel.svelte")
+                let caller = async () => await import("/data/data/com.termux/files/home/repos/portfolio/src/routes/SideCodePanel.svelte")
 
                 const result = await caller();
                 update();

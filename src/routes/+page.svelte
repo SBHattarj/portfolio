@@ -29,6 +29,7 @@
 
     $: projects = data.projects
     $: skills = data.skills
+    $: console.log(data)
 
     $: mainStyles = $MainStyles
     let showMyWork = false
