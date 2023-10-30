@@ -73,7 +73,7 @@
                 {linkedInAssesment}
                 {certificate}
             >
-                <svg width="80%" use:svgExtend={logo} />
+                <svg width="80%" style:aspect-ratio="1" use:svgExtend={logo} />
                 
             </MySkillCard>
         {/each}
