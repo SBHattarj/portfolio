@@ -16,11 +16,13 @@
     import { MainStyles } from "$lib/core/stores/styles";
     import { slide } from "svelte/transition";
     import { onMount } from "svelte";
+    import { svgExtend } from "$lib/core/utils/svg";
     export let linkedInAssesment: "none" | CertLink | null | undefined = "none"
     export let certificate: "none" | CertLink | null | undefined = "none"
     export let name: string
     export let visibleDelay = 300
     export let visible = true
+    export let logo: string
     let idSelf = id++;
     let cardVisible = false
     $: isObserved = $skillObserver.visibleSections.has(idSelf.toString())
@@ -99,6 +101,7 @@
                 <div>
                     <slot />
                 </div>
+                <svg width="80%" use:svgExtend={logo}/>
                 <h4>{name}</h4>
                 <div>
                     <span>ln assesment:</span>

@@ -41,7 +41,7 @@
     class="my-skill-root"
     bind:clientWidth={rootWidth}
 >
-    {#each skills as {name, linkedInAssesment, certificate} (name)}
+    {#each skills as {name, linkedInAssesment, certificate, logo} (name)}
         <div
             style:width="fit-content"
             use:getFurthest
@@ -50,6 +50,7 @@
                 {name}
                 {linkedInAssesment}
                 {certificate}
+                {logo}
                 visible={false}
             />
         </div>
