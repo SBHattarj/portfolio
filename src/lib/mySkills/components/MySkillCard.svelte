@@ -96,7 +96,11 @@
                 style:padding={$MainStyles.spacing.normal}
                 style:float="right"
             >
-                <div>
+                <div
+                    style:display="flex"
+                    style:flex-direction="column"
+                    style:align-items="cneter"
+                >
                     <slot />
                 </div>
                 <h4>{name}</h4>
