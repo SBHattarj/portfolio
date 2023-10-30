@@ -159,9 +159,10 @@
     @import "$lib/core/utils/containerQuery.sass"
     $width: min(10ch, 60vw)
     .my-skill-card-root
-        width: max(min(10ch, 80%), $width)
+        width: fit-content
         aspect-ratio: 1
     .my-skill-card
+        width: fit-content
         aspect-ratio: 1
         border: solid
         h4
