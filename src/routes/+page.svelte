@@ -22,7 +22,7 @@
     import J from "jquery";
 	import node from "full-client-server-sveltekit";
     import { page } from "$app/stores";
-	import { getVisitorNumber, IntroComplete } from "$lib/core/server/visitor";
+	import { getVisitorNumber, IntroComplete } from "server:/lib/core/server/visitor";
     console.log(phoneSvg)
 
     export let data;
@@ -102,11 +102,10 @@
             topPanelDone = true
             introDone = true
             await sleep(1500)
-            await node(async () => {
+            visitorNumber = await node(async () => {
                 const id = $page.data.userId
-                visitorNumber = await getVisitorNumber(id)
                 IntroComplete(id);
-                console.log(visitorNumber)
+                return await getVisitorNumber(id)
             })
             showMyWork = true
             await sleep(700)
