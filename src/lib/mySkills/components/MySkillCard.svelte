@@ -159,17 +159,16 @@
     @import "$lib/core/utils/containerQuery.sass"
     $width: min(10ch, 60vw)
     .my-skill-card-root
-        min-width: $width
-        width: max-content
+        width: max(min(10ch, 80%), $width)
         aspect-ratio: 1
     .my-skill-card
-        min-width: $width
-        width: max-content
         aspect-ratio: 1
         border: solid
         h4
             text-align: center
             margin-bottom: 0.5rem
+            overflow: hidden
+            text-overflow: ellipsis
         & > div
             display: grid
             grid-template-columns: 1fr 1fr

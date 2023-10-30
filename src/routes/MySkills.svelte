@@ -53,7 +53,7 @@
                 {certificate}
                 visible={false}
             >
-                <svg width="30em" use:svgExtend={logo} />
+                <svg width="80%" use:svgExtend={logo} />
             </MySkillCard>
         </div>
     {/each}
@@ -73,7 +73,7 @@
                 {linkedInAssesment}
                 {certificate}
             >
-                <svg width="30em" use:svgExtend={logo} />
+                <svg width="80%" use:svgExtend={logo} />
                 
             </MySkillCard>
         {/each}
