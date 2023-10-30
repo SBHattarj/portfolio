@@ -50,7 +50,7 @@
     let mainHeight = 0
     let sidePanelDone = false
     let typedAboutMe = import.meta.env.SSR || $page.data.introComplete ? aboutMe : ""
-    let visitorNumber: number | null | undefined = null;
+    let visitorNumber: number | null | undefined = data.visitorNumber ?? null;
     $: {
         if(textToType === portfolioQuote) {
             typedQuote = typed
@@ -123,7 +123,7 @@
         },
         [aboutMe]() {}
     }
-    let visitorNumberString = ""
+    let visitorNumberString = data.visitorNumber?.toString() ?? ""
     async function setVisitorNumberString(visitorNumberCurr: number) {
         const vns = visitorNumberCurr.toString()
         while(visitorNumberString !== vns && visitorNumberCurr === visitorNumber) {
@@ -392,6 +392,8 @@
                 style:flex-direction="column"
                 style:gap="1rem"
                 style:font-size="1.4rem"
+                style:max-width="80%"
+                class="contacts"
             >
                 <a href="tel:8481860425" target="_blank"><svg
                         width="1em"
@@ -547,4 +549,6 @@
     #contacts
         a
             text-align: left
+            overflow: hidden
+            text-overflow: ellipsis
 </style>
