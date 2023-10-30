@@ -3,6 +3,7 @@
     import MySkillCard from "$lib/mySkills/components/MySkillCard.svelte";
 	import { tick } from "svelte";
 	import type { PageData } from "./$types";
+    import { svgExtend } from "$lib/core/utils/svg";
 
     export let skills: PageData["skills"];
     let allEllements = [] as HTMLElement[]
@@ -50,9 +51,10 @@
                 {name}
                 {linkedInAssesment}
                 {certificate}
-                {logo}
                 visible={false}
-            />
+            >
+                <svg width="30em" use:svgExtend={logo} />
+            </MySkillCard>
         </div>
     {/each}
     <div
@@ -65,12 +67,15 @@
         style:padding-right="{paddingRight}px"
         style:gap={mainStyles.spacing.normal}
     >
-        {#each skills as {name, linkedInAssesment, certificate} (name)}
+        {#each skills as {name, linkedInAssesment, certificate, logo} (name)}
             <MySkillCard
                 {name}
                 {linkedInAssesment}
                 {certificate}
-            />
+            >
+                <svg width="30em" use:svgExtend={logo} />
+                
+            </MySkillCard>
         {/each}
     </div>
 </div>
