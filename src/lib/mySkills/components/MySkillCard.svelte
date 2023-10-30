@@ -132,7 +132,11 @@
             style:padding={$MainStyles.spacing.normal}
             style:visibility="hidden"
         >
-            <div>
+            <div
+                style:display="flex"
+                style:flex-direction="column"
+                style:align-items="cneter"
+            >
                 <slot />
             </div>
             <h4>{name}</h4>
