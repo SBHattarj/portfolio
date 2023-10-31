@@ -7,7 +7,6 @@ export function svgExtend(svg: SVGElement, extender: string): ActionReturn<strin
     if(extender.trim().replace(/\n/g, "").endsWith("svg>")) {
         extender = extender.trim().replace(/\n/g, "").replace(/^[\s\S]*<svg/, "<svg")
     }
-    console.log("svg extender", extender)
     let $extender = $<SVGElement>(extender);
     const returnValue = {
         update(extender: string) {

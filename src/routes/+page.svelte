@@ -23,13 +23,11 @@
 	import node from "full-client-server-sveltekit";
     import { page } from "$app/stores";
 	import { getVisitorNumber, IntroComplete } from "server:/lib/core/server/visitor";
-    console.log(phoneSvg)
 
     export let data;
 
     $: projects = data.projects
     $: skills = data.skills
-    $: console.log(data)
 
     $: mainStyles = $MainStyles
     let showMyWork = false
@@ -129,7 +127,6 @@
         const vns = visitorNumberCurr.toString()
         while(visitorNumberString !== vns && visitorNumberCurr === visitorNumber) {
             if(vns.startsWith(visitorNumberString)) {
-                console.log(vns)
                 visitorNumberString += Math.round(Math.random() * 10).toString()
                 await sleep(100)
                 continue

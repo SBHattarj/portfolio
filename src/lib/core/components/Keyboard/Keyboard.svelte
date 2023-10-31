@@ -118,7 +118,6 @@
         }
     }
     async function typer(toBeTypedInner: string, typeInner: boolean)  {
-        console.log(toBeTypedInner)
         while(type && typed !== toBeTypedInner && toBeTypedInner === toBeTyped) {
             await sleep(1000 / typingSpeed * (1 - Math.random() * percentTypingConsistency / 100))
             if(toBeTyped === '' && !allowEmpty) {
@@ -166,7 +165,6 @@
         }
     }
     $: {
-        console.log(toBeTyped)
         typer(toBeTyped, type)
     }
     function createGridLayout(virtualGrid: typeof VirtualGrid, currentMode: string) {

@@ -16,8 +16,6 @@
     $: url = $page.url.pathname
     const updatingProject = getQueryStoreKey(page, "updating-project")
     $: isUpdating = $updatingProject === project.id.toString()
-    $: console.log(project.id)
-    $: console.log(action)
 </script>
 
 <div class="updatable-project">

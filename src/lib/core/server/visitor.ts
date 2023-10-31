@@ -52,7 +52,6 @@ export function revalidateVisitor(id: number, cookie: string) {
         }
         if(user == null) return
         if(createHmac('sha256', user.cookieHash).update(user.cookie).digest("base64") !== cookie) return
-        console.log(user)
         await db.update(visitor).set({
             invalidateBy: new Date(now.getFullYear(), now.getMonth() + 2, now.getDate())
         }).where(eq(visitor.id, id)).execute()

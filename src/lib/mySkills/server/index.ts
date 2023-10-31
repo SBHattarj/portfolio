@@ -12,7 +12,6 @@ export function getSkills() {
             .from(skill)
             .leftJoin(certLink, or(eq(certLink.id, skill.linkedInAssesment), eq(certLink.id, skill.certificate)))
            ).reduce((accumulator, current) => {
-               console.log("getting", current)
                let currentSkill = accumulator.get(current.skill.name) ?? {
                     name: current.skill.name,
                     logo: current.skill.logo

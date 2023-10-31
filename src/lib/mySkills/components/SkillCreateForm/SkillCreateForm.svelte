@@ -5,7 +5,6 @@ import { skillCreateSchema } from "$lib/mySkills/schemas/skills";
     export let entry: string | null = null
     export let action = ""
     let data: any;
-    $: console.log(data)
 </script>
 <div>
     <h2>Create Skill</h2>

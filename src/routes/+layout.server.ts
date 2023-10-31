@@ -14,7 +14,6 @@ export async function load({cookies}) {
         }
     }
     const user = await revalidateVisitor(visitorIdTrue, cookie)
-    console.log("layout load", user)
     if(user == null) return
     cookies.set("visitor-id", user?.id?.toString())
     cookies.set("visitor-cookie", createHmac('sha256', user.cookieHash).update(user.cookie).digest("base64"))

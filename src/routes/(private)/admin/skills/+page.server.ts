@@ -79,7 +79,6 @@ export const actions = {
                 else if (certificate?.url != null && certificate?.text != null) {
                     certificateId = await createCertLink(certificate) as number
                 }
-                console.log(certificateId, linkedInAssesmentId)
                 await db.update(skill).set({
                     logo: await data.logo?.text(),
                     certificate: certificateId ?? null,

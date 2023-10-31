@@ -16,8 +16,6 @@
     $: currentlyUpdating = $updatingProjectType === projectType.name && $renderer
     $: url = $page.url.pathname
     export let entry: string | null = null
-    $: console.log(action)
-    $: console.log(!!$renderer)
 </script>
 
 <div class="project-type">

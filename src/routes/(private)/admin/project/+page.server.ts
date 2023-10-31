@@ -21,6 +21,7 @@ export const actions = {
                         }]
                     })
                 }
+                console.log(error)
             }
         }
     }),
@@ -28,7 +29,6 @@ export const actions = {
         schema: insertProjectTypeSchema,
         async action(_, data) {
             try {
-                console.log(data)
                 return
                 await db.update(projectType).set(data).where(eq(projectType.name, data.name)).execute()
             } catch(error) {

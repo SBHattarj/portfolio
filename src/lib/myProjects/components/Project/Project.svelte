@@ -15,11 +15,12 @@
     $: mainStyles = $MainStyles
     export let projectData: ProjectData
     export let descriptionColor = "rgb(255, 2, 48)"
+    let anchor: HTMLAnchorElement
     let aWidth = 0
     let aHeight = 0
     let iframeWidth = 0
     let iframeHeight = 0
-    $: scale = (aWidth - (toPx?.("2em") ?? 0)) / iframeWidth 
+    $: scale = (aWidth - (toPx?.("2em", anchor) ?? 0)) / iframeWidth 
     $: scaledIframeWidth = iframeWidth * scale
     $: scaledIframeHeight = iframeHeight * scale
     export let offsetX = 0
@@ -54,7 +55,7 @@
             <div class="hoverer"></div>
             <p>{projectData.description}</p>
         </div>
-        <a href={projectData.url} bind:clientWidth={aWidth} bind:clientHeight={aHeight}>
+        <a bind:this={anchor} href={projectData.url} bind:clientWidth={aWidth} bind:clientHeight={aHeight}>
             <div class="hoverer"></div>
             <div class="hoverer"></div>
             <div class="hoverer"></div>
@@ -104,34 +105,23 @@
     @use "sass:math"
     @import "$lib/myProjects/utils/animation.sass"
     @import "$lib/core/utils/containerQuery.sass"
-    $width: min(40ch, 30vw)
+    $width: min(40ch, 60vw)
+    * 
+        box-sizing: border-box
     $aspect-ratio: 2.57 / 3
     a
         padding: 1rem
         display: block
-        width: $width
+        width: 100%
         aspect-ratio: $aspect-ratio
         @include container($max-width: 18ch)
-    h3
-        margin-bottom: 0.1rem
-        overflow: hidden
-        width: 100%
-        text-overflow: ellipsis
-    iframe
-        width: 100vw
-        aspect-ratio: 3 / 2.77  
-        pointer-events: none
-        .no-js
-            height: 100%
-            width: 100%
-    h3
-        font-size: 1.7rem
+            h3
+                font-size: 1.2em
     .project-card-container
         display: inline-block
         position: relative
-        width: calc(2.8rem + $width)
+        width: $width
         aspect-ratio: $aspect-ratio
-        margin: 4rem
         margin-inline: 5rem
         padding: 0
         margin-block: 1ch
@@ -140,23 +130,25 @@
         position: absolute
         top: 0
         left: 0
-        width: calc(2.8rem + $width)
+        width: 100%
         aspect-ratio: $aspect-ratio
         transform-origin: center
         transition: transform 0.25s 3s ease-in, scale 0.2s ease
         perspective: 100em
         p
             text-wrap: wrap
-            max-height: 100%
+            height: 100%
             overflow: hidden
+            text-overflow: ellipsis
+            margin: 0
         & > div
             position: absolute
             top: 0.2rem
             left: 0.2rem
-            padding: 1em
+            padding-inline: 1em
             transition: transform 0.25s 3s ease-in, box-shadow 0.25s
             border-radius: var(--mainStyles-borderRadius-normal)
-            width: $width
+            width: 100%
             aspect-ratio: $aspect-ratio
             background-color: var(--mainStyles-mainBackgroundColor-dark)
             text-shadow: 1px 0px 0 var(--description-color), 0px 1px 0 var(--description-color), -1px 0px 0 var(--description-color), 0px -1px 0 var(--description-color), 0px 0px 3em var(--description-color)
@@ -282,4 +274,17 @@
                 transform: translateX(-40%) rotateY(calc(45deg - var(--rotateY))) rotateX(var(--rotateX))
                 &:hover
                     box-shadow: 0px 0px 3em -3px var(--description-color)
+    h3
+        margin-bottom: 0.1rem
+        overflow: hidden
+        width: 100%
+        text-overflow: ellipsis
+        font-size: 1.7em
+    iframe
+        width: 100vw
+        aspect-ratio: 3 / 2.77  
+        pointer-events: none
+        .no-js
+            height: 100%
+            width: 100%
 </style>

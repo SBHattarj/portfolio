@@ -12,7 +12,6 @@
     function getFurthest(node: HTMLElement) {
         allEllements.push(node)
         allEllements = allEllements
-        console.log(allEllements)
         return {
             destroy() {
                 allEllements = allEllements.filter(el => el !== node)
@@ -29,7 +28,6 @@
                 furthestEllement = node
             }
         }
-        console.log(furthestEllement)
         tick().then(() => {
             paddingRight = (rootWidth - (furthestEllement?.offsetLeft ?? 0) - (furthestEllement?.clientWidth ?? 0))
         })

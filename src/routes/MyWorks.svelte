@@ -61,6 +61,7 @@
             on:scroll-center={scrollCenter}
             spaceDisplay="inline-block"
             padding="5ch"
+            controllButtons
         >
             <div
                 style:white-space="nowrap"
@@ -68,19 +69,21 @@
                 style:width="100%"
                 style:overflow="auto"
                 style:box-sizing="border-box"
+                style:overflow-y="hidden"
                 style:scroll-snap-type={import.meta.env.SSR ? "none" : "x mandatory"}
-                style:padding-block="4ch"
+                style:padding="0"
+                style:padding-bottom="3rem"
             >
                 {#if !import.meta.env.SSR}
                     <div
                         style:display="inline-block"
-                        style:width="calc(2.8rem + 40ch)"
+                        style:width="min(40ch, 60vw)"
                         style:margin-inline="5rem"
                         class="padding"
                     ></div>
                     <div
                         style:display="inline-block"
-                        style:width="calc(2.8rem + 40ch)"
+                        style:width="min(40ch, 60vw)"
                         style:margin-inline="5rem"
                         class="padding"
                     ></div>
@@ -89,19 +92,19 @@
                     <Project
                         projectData={website}
                         descriptionColor={value.color}
-                        marginLeft="9rem"
+                        marginLeft={import.meta.env.SSR ? "9rem" : undefined}
                     />
                 {/each}
                 {#if !import.meta.env.SSR}
                     <div
                         style:display="inline-block"
-                        style:width="calc(2.8rem + 40ch)"
+                        style:width="min(40ch, 60vw)"
                         style:margin-inline="5rem"
                         class="padding"
                     ></div>
                     <div
                         style:display="inline-block"
-                        style:width="calc(2.8rem + 40ch)"
+                        style:width="min(40ch, 60vw)"
                         style:margin-inline="5rem"
                         class="padding"
                     ></div>

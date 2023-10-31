@@ -7,7 +7,6 @@
         return acc
         
     }, [] as {crumb: string, path: string}[]);
-    $: console.log(breadCrumbs)
 </script>
 <header>
     <nav>
